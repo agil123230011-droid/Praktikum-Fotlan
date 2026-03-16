@@ -1,44 +1,42 @@
 input_polygons:
-  - datasets:
-      - bgt/bgt_wegdeel.sqlite
-      - bgt/bgt_ondersteunendwegdeel.sqlite
-    uniqueid: gml_id
-    lifting: Road
-    height_field: relatievehoogteligging
-
-  - datasets:
-      - bgt/bgt_pand.sqlite
-    uniqueid: gml_id
-    lifting: Building
-    height_field: relatievehoogteligging
+  datasets:
+    - ./vektor_praktikum/vektor_jalan.sqlite
+      uniqueid: id
+      lifting: Road
+      height_field: id
+    - ./vektor_praktikum/vektor_bangunan.sqlite
+      uniqueid: orig_oid
+      lifting: Building
+      height_field: status
 
 lifting_options:
   Building:
-    height_roof: percentile-90
-    height_floor: percentile-10
     lod: 1
-    use_LAS_classes:
-      - 2
-
+    floor: true
+    inner_walls: true
+    triangulate: false
+    ground:
+      height: percentile-10
+      use_LAS_classes:
+        - 2
+    roof:
+      height: percentile-90
+      use_LAS_classes:
+        - 6
   Road:
     height: percentile-50
     use_LAS_classes:
-      - 6
+      - 2
 
 input_elevation:
-  - datasets:
-      - ahn3/ahn3_cropped_1.laz
-      - ahn3/ahn3_cropped_2.laz
-    omit_LAS_classes:
-      - 1
-    thinning: 0
+  datasets:
+    - ./lidar/lidar_sebatik.las
+  omit_LAS_classes:
+    - 0   # Never classified
+    - 1   # Unclassified
+  thinning: 0
 
 options:
   building_radius_vertex_elevation: 3.0
   radius_vertex_elevation: 1.0
   threshold_jump_edges: 0.5
-
-output:
-  format: OBJ
-  building_floor: false
-  vertical_exaggeration: 0
